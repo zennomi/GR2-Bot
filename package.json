@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@grammyjs/conversations": "^1.1.2",
+    "@grammyjs/ratelimiter": "^1.2.0",
+    "@typegoose/typegoose": "^11.7.1",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.9.0",
+    "grammy": "^1.19.2",
+    "grammy-inline-menu": "^8.0.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.1",
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3",
+    "znv": "^0.4.0",
+    "zod": "^3.22.4"
+  },
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon -T src/app.ts"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.201",
+    "@types/node-schedule": "^2.1.3"
+  }
+}
