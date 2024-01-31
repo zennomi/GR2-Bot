@@ -26,12 +26,12 @@ const singleWalletMenu = new MenuTemplate<BotContext>(async ctx => {
 
 singleWalletMenu.manualRow(createBackMainMenuButtons());
 
-singleWalletMenu.interact("Edit", "edit", {
-    do: async ctx => {
-        await ctx.conversation.enter("editPrivateKey");
-        return false;
-    }
-});
+// singleWalletMenu.interact("Edit", "edit", {
+//     do: async ctx => {
+//         await ctx.conversation.enter("editPrivateKey");
+//         return false;
+//     }
+// });
 
 singleWalletMenu.interact("Delete", "delete", {
     joinLastRow: true,

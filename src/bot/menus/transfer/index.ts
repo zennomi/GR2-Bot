@@ -66,23 +66,23 @@ transferMenu.interact("Connect Wallet", "connect", {
     });
 });
 
-transferMenu.interact("Transfer All to One", "transfer", {
-    do: async ctx => {
-        const mess = `Enter the receiving wallet address with amount \n` +
-            `Note that:\n` +
-            `• Leaving the amount blank transfers the entire remaining balance.\n
-        • The address and amount are separated by comma;\n`+
-            `Example:\n` +
-            `Address with remaining amount:\n
-        ${ethers.Wallet.createRandom().address}\n\n` +
-            `Address with specified amount:\n
-        ${ethers.Wallet.createRandom().address},0.001`;
-        sendMessage(ctx.chat.id, mess);
+// transferMenu.interact("Transfer All to One", "transfer", {
+//     do: async ctx => {
+//         const mess = `Enter the receiving wallet address with amount \n` +
+//             `Note that:\n` +
+//             `• Leaving the amount blank transfers the entire remaining balance.\n
+//         • The address and amount are separated by comma;\n`+
+//             `Example:\n` +
+//             `Address with remaining amount:\n
+//         ${ethers.Wallet.createRandom().address}\n\n` +
+//             `Address with specified amount:\n
+//         ${ethers.Wallet.createRandom().address},0.001`;
+//         sendMessage(ctx.chat.id, mess);
 
-        await ctx.conversation.enter("sendAlltoOne");
-        return false;
-    }
-});
+//         await ctx.conversation.enter("sendAlltoOne");
+//         return false;
+//     }
+// });
 
 transferMenu.interact("Reload List", "reload", {
     do: async ctx => {

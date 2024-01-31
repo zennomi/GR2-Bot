@@ -9,7 +9,7 @@ import config from "../../config";
 import { sendEther, sendMaxAmount } from "../../services/trade";
 
 export async function editPrivateKey(conversation: Conversation<BotContext>, ctx: BotContext) {
-    const privateKey = await askSingleQuestion({ conversation, ctx, question: "Paste token address to import address!" });
+    const privateKey = await askSingleQuestion({ conversation, ctx, question: "Paste private key to import address!" });
 
     const index = ctx.session.currentWallet.index;
     const currentWalletAddress = ctx.session.currentWallet.address;

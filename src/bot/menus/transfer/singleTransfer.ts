@@ -27,12 +27,12 @@ const singleTransferMenu = new MenuTemplate<BotContext>(async ctx => {
 
 singleTransferMenu.manualRow(createBackMainMenuButtons());
 
-singleTransferMenu.interact("Edit", "edit", {
-    do: async ctx => {
-        await ctx.conversation.enter("editPrivateKey");
-        return false;
-    }
-});
+// singleTransferMenu.interact("Edit", "edit", {
+//     do: async ctx => {
+//         await ctx.conversation.enter("editPrivateKey");
+//         return false;
+//     }
+// });
 
 singleTransferMenu.interact("Delete", "delete", {
     joinLastRow: true,

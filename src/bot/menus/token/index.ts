@@ -7,19 +7,22 @@ import { ethers, formatUnits } from "ethers";
 import { sendMessage } from "../../../utils/telegram";
 
 const tokenMenu = new MenuTemplate<BotContext>(async (ctx) => {
-    const { token } = ctx.session;
-
-
-    if (!token) return "Please add token address";
-
-    let tokenName = await getTokenName(token.address);
-    let tokenSymbol = await getTokenSymbol(token.address);
 
     const wallets = await WalletModel.find({
         owner: ctx.from.id
     });
 
     ctx.session.wallets = wallets;
+
+    if (ctx.session.wallets.length === 0) return "Please add a wallet"
+
+    const { token } = ctx.session;
+
+    if (!token) return "Please add token address";
+
+    let tokenName = await getTokenName(token.address);
+    let tokenSymbol = await getTokenSymbol(token.address);
+
 
     if (ctx.session.currentTokenWallet.index == -1 && ctx.session.wallets.length != 0) {
         ctx.session.currentTokenWallet.index = 0;
@@ -38,7 +41,7 @@ const tokenMenu = new MenuTemplate<BotContext>(async (ctx) => {
 tokenMenu.manualRow(createBackMainMenuButtons());
 
 tokenMenu.interact("Add token address", "add", {
-    hide: ctx => !!ctx.session.token,
+    hide: ctx => !!ctx.session.token || ctx.session.wallets.length === 0,
     do: async ctx => {
         await ctx.conversation.enter("enterTokenContract");
         return false;
