@@ -2,10 +2,9 @@ import { MenuTemplate, createBackMainMenuButtons } from "grammy-inline-menu";
 import { BotContext } from "../../../types";
 import { getPair, getTokenBalance, getTokenName, getTokenSymbol } from "../../../services/token";
 import WalletModel from "../../../models/wallet";
-import { swapExactAVAXForTokens, swapExactTokensForAVAX } from "../../../services/trade";
-import { ethers } from "ethers";
+import { approveMax, swapExactETHForTokens, swapExactTokensForETH } from "../../../services/trade";
+import { ethers, formatUnits } from "ethers";
 import { sendMessage } from "../../../utils/telegram";
-import config from "../../../config";
 
 const tokenMenu = new MenuTemplate<BotContext>(async (ctx) => {
     const { token } = ctx.session;
@@ -15,18 +14,6 @@ const tokenMenu = new MenuTemplate<BotContext>(async (ctx) => {
 
     let tokenName = await getTokenName(token.address);
     let tokenSymbol = await getTokenSymbol(token.address);
-
-    let pair = await getPair(token.address, config.WAVAX);
-
-    const text = `${tokenName} (${tokenSymbol}) \n\n` +
-        `🪙 CA: ${token.address} \n` +
-        `🎯 Exchange: TraderJoe \n` +
-        `💡 MarketCap: ??? \n` +
-        `💧 Liquidity: ??? \n` +
-        `💰 Token Price: ??? \n\n` +
-        `<a href="https://www.dextools.io/app/en/avalanche/pair-explorer/${pair}">DexTools</a> | <a href="https://snowtrace.io/address/${pair}#code-43113">Pair</a>`;
-
-
 
     const wallets = await WalletModel.find({
         owner: ctx.from.id
@@ -38,6 +25,12 @@ const tokenMenu = new MenuTemplate<BotContext>(async (ctx) => {
         ctx.session.currentTokenWallet.index = 0;
         ctx.session.currentTokenWallet.address = ctx.session.wallets[0].address;
     }
+
+    let tokenBalance = await getTokenBalance(token.address, ctx.session.currentTokenWallet.address)
+
+    const text = `${tokenName} (${tokenSymbol}) \n\n` +
+        `🪙 Token Address: ${token.address} \n` +
+        `Token Balance: ${formatUnits(tokenBalance, 18)} ${tokenSymbol}`
 
     return { text, parse_mode: "HTML", disable_web_page_preview: true };
 });
@@ -80,7 +73,7 @@ tokenMenu.interact("Refresh", "refresh", {
     }
 });
 
-tokenMenu.interact("Tip AVAX Amount?", "tip", {
+tokenMenu.interact("Tip ETH Amount?", "tip", {
     hide: ctx => !ctx.session.token,
     joinLastRow: true,
     do: async ctx => {
@@ -140,7 +133,7 @@ tokenMenu.interact("---Actions--- ", "divider-2", {
 });
 
 [0.01, 0.1, 0.3, 0.5, 1, 2, 5, 10, 0.0001].map((amount, index) => {
-    tokenMenu.interact(`🚀 Buy ${amount} AVAX`, `buy-${amount}`, {
+    tokenMenu.interact(`🚀 Buy ${amount} ETH`, `buy-${amount}`, {
         hide: ctx => !ctx.session.token || !ctx.session.token!.isBuyMode,
         joinLastRow: index % 3 !== 0,
         do: async (ctx) => {
@@ -149,15 +142,14 @@ tokenMenu.interact("---Actions--- ", "divider-2", {
                 sendMessage(ctx.chat.id, "Buying...");
                 const wallet = ctx.session.wallets.find(w => w.address == ctx.session.currentTokenWallet.address)!;
 
-                sendMessage(ctx.chat.id, `🟣 Submitting buy ${amount} AVAX transaction | Sender: ${wallet.address}`);
-                const result = await swapExactAVAXForTokens(ctx.session.token!.address, ethers.parseEther(amount.toString()), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
-                console.log(result);
+                sendMessage(ctx.chat.id, `🟣 Submitting buy ${amount} ETH transaction | Sender: ${wallet.address}`);
+                const result = await swapExactETHForTokens(ctx.session.token!.address, ethers.parseEther(amount.toString()), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
 
                 if (result == null) {
                     sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallet.address}`);
                 }
                 else {
-                    sendMessage(ctx.chat.id, `🟢 Buy <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
+                    sendMessage(ctx.chat.id, `🟢 Buy <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
                 }
             }
             else {
@@ -166,15 +158,15 @@ tokenMenu.interact("---Actions--- ", "divider-2", {
 
                     const wallet = ctx.session.wallets[i];
 
-                    sendMessage(ctx.chat.id, `🟣 Submitting buy ${amount} AVAX transaction | Sender: ${wallet.address}`);
-                    const result = await swapExactAVAXForTokens(ctx.session.token!.address, ethers.parseEther(amount.toString()), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
-                    console.log(result);
+                    sendMessage(ctx.chat.id, `🟣 Submitting buy ${amount} ETH transaction | Sender: ${wallet.address}`);
+
+                    const result = await swapExactETHForTokens(ctx.session.token!.address, ethers.parseEther(amount.toString()), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
 
                     if (result == null) {
                         sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallet.address}`);
                     }
                     else {
-                        sendMessage(ctx.chat.id, `🟢 Buy <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, 'HTML');
+                        sendMessage(ctx.chat.id, `🟢 Buy <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, 'HTML');
                     }
                 }
             }
@@ -183,7 +175,7 @@ tokenMenu.interact("---Actions--- ", "divider-2", {
     });
 });
 
-tokenMenu.interact(`🚀 Buy X AVAX`, 'buy-x', {
+tokenMenu.interact(`🚀 Buy X ETH`, 'buy-x', {
     hide: ctx => !ctx.session.token || !ctx.session.token!.isBuyMode,
     do: async ctx => {
         await ctx.conversation.enter("enterBuyAmount");
@@ -204,15 +196,15 @@ tokenMenu.interact(`🚀 Buy X AVAX`, 'buy-x', {
 
                 sendMessage(ctx.chat.id, `🟣 Submitting sell transaction | Sender: ${wallet.address}`);
 
+                await approveMax(wallet.privateKey, ctx.session.token!.address)
 
-                const result = await swapExactTokensForAVAX(ctx.session.token!.address, BigInt(tokenAmount) * BigInt(amount) / BigInt(100), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
-                console.log(result);
+                const result = await swapExactTokensForETH(ctx.session.token!.address, BigInt(tokenAmount) * BigInt(amount) / BigInt(100), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
 
                 if (result == null) {
                     sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallet.address}`);
                 }
                 else {
-                    sendMessage(ctx.chat.id, `🟢 Sell <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
+                    sendMessage(ctx.chat.id, `🟢 Sell <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
                 }
             }
             else {
@@ -224,15 +216,14 @@ tokenMenu.interact(`🚀 Buy X AVAX`, 'buy-x', {
 
                     sendMessage(ctx.chat.id, `🟣 Submitting sell transaction | Sender: ${wallet.address}`);
 
-
-                    const result = await swapExactTokensForAVAX(ctx.session.token!.address, BigInt(tokenAmount) * BigInt(amount) / BigInt(100), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
-                    console.log(result);
+                    await approveMax(wallet.privateKey, ctx.session.token!.address)
+                    const result = await swapExactTokensForETH(ctx.session.token!.address, BigInt(tokenAmount) * BigInt(amount) / BigInt(100), wallet.privateKey, ctx.session.currentTokenWallet.slippage, ctx.from.id);
 
                     if (result == null) {
                         sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallet.address}`);
                     }
                     else {
-                        sendMessage(ctx.chat.id, `🟢 Sell <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
+                        sendMessage(ctx.chat.id, `🟢 Sell <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
                     }
                 }
             }
@@ -249,5 +240,13 @@ tokenMenu.interact(`🚀 Sell X Token`, 'sell-x', {
         return false;
     }
 });
+
+tokenMenu.interact(`🗑️ Remove token`, 'remove', {
+    hide: ctx => !ctx.session.token,
+    do: ctx => {
+        ctx.session.token = undefined
+        return true
+    }
+})
 
 export default tokenMenu;

@@ -10,7 +10,7 @@ const referralMenu = new MenuTemplate<BotContext>(async ctx => {
 
   const text = `Referral System Report:\n` +
     `Your referral link: https://t.me/pororo_test_bot?start=${result!.referralCode}\n` +
-    `Lifetime AVAX earned: ${result!.feeAccumulated}\n` +
+    `Lifetime ETH earned: ${result!.feeAccumulated}\n` +
     `Refer your friends and earn 25% of their fees at first month, 15% second and 10% forever!`;
   return text;
 });

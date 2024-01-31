@@ -3,8 +3,8 @@ import { BotContext } from "../../../types";
 
 const helpMenu = new MenuTemplate<BotContext>(ctx => {
   const text = `Support commands:\n` +
-    `/start - Your Gateway to AVAX DeFi\n` +
-    `/sniper - Snipe token on AVAX\n` +
+    `/start - Your Gateway to ETH DeFi\n` +
+    `/sniper - Snipe token on ETH\n` +
     `/trades - Track, monitor your trades\n` +
     `/buysell - Swap Token\n` +
     `/referral - Referral System\n` +

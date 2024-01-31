@@ -1,7 +1,23 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_WETH",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
-    "name": "WAVAX",
+    "name": "WETH",
     "outputs": [
       {
         "internalType": "address",
@@ -9,7 +25,7 @@
         "type": "address"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -95,7 +111,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAXMin",
+        "name": "amountETHMin",
         "type": "uint256"
       },
       {
@@ -109,7 +125,7 @@
         "type": "uint256"
       }
     ],
-    "name": "addLiquidityAVAX",
+    "name": "addLiquidityETH",
     "outputs": [
       {
         "internalType": "uint256",
@@ -118,7 +134,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAX",
+        "name": "amountETH",
         "type": "uint256"
       },
       {
@@ -140,7 +156,7 @@
         "type": "address"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -351,7 +367,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAXMin",
+        "name": "amountETHMin",
         "type": "uint256"
       },
       {
@@ -365,7 +381,7 @@
         "type": "uint256"
       }
     ],
-    "name": "removeLiquidityAVAX",
+    "name": "removeLiquidityETH",
     "outputs": [
       {
         "internalType": "uint256",
@@ -374,7 +390,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAX",
+        "name": "amountETH",
         "type": "uint256"
       }
     ],
@@ -400,7 +416,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAXMin",
+        "name": "amountETHMin",
         "type": "uint256"
       },
       {
@@ -414,11 +430,11 @@
         "type": "uint256"
       }
     ],
-    "name": "removeLiquidityAVAXSupportingFeeOnTransferTokens",
+    "name": "removeLiquidityETHSupportingFeeOnTransferTokens",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "amountAVAX",
+        "name": "amountETH",
         "type": "uint256"
       }
     ],
@@ -444,7 +460,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAXMin",
+        "name": "amountETHMin",
         "type": "uint256"
       },
       {
@@ -478,7 +494,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "removeLiquidityAVAXWithPermit",
+    "name": "removeLiquidityETHWithPermit",
     "outputs": [
       {
         "internalType": "uint256",
@@ -487,7 +503,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAX",
+        "name": "amountETH",
         "type": "uint256"
       }
     ],
@@ -513,7 +529,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "amountAVAXMin",
+        "name": "amountETHMin",
         "type": "uint256"
       },
       {
@@ -547,11 +563,11 @@
         "type": "bytes32"
       }
     ],
-    "name": "removeLiquidityAVAXWithPermitSupportingFeeOnTransferTokens",
+    "name": "removeLiquidityETHWithPermitSupportingFeeOnTransferTokens",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "amountAVAX",
+        "name": "amountETH",
         "type": "uint256"
       }
     ],
@@ -655,7 +671,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapAVAXForExactTokens",
+    "name": "swapETHForExactTokens",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -689,7 +705,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapExactAVAXForTokens",
+    "name": "swapExactETHForTokens",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -723,7 +739,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapExactAVAXForTokensSupportingFeeOnTransferTokens",
+    "name": "swapExactETHForTokensSupportingFeeOnTransferTokens",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -756,7 +772,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapExactTokensForAVAX",
+    "name": "swapExactTokensForETH",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -795,7 +811,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapExactTokensForAVAXSupportingFeeOnTransferTokens",
+    "name": "swapExactTokensForETHSupportingFeeOnTransferTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -900,7 +916,7 @@
         "type": "uint256"
       }
     ],
-    "name": "swapTokensForExactAVAX",
+    "name": "swapTokensForExactETH",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -949,5 +965,9 @@
     ],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]

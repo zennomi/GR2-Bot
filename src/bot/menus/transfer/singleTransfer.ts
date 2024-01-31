@@ -50,7 +50,7 @@ singleTransferMenu.interact("Delete", "delete", {
     }
 });
 
-singleTransferMenu.interact("Transfer AVAX", "transfer", {
+singleTransferMenu.interact("Transfer ETH", "transfer", {
     do: async ctx => {
         const mess = `Enter the receiving wallets address with amount \n` +
             `${ethers.Wallet.createRandom().address

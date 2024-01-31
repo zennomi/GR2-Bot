@@ -11,9 +11,6 @@ const menuTemplate = new MenuTemplate<BotContext>((ctx) => {
     const text = `🚀 AvaxTradingBot: Your Gateway to Avax DeFi 🤖\n` +
         `<a href="https://avax.com">Website</a>`;
 
-    ctx.session.token = undefined;
-
-
     return {
         text,
         parse_mode: "HTML",
@@ -23,23 +20,23 @@ const menuTemplate = new MenuTemplate<BotContext>((ctx) => {
 
 menuTemplate.submenu("📈 Buy & Sell", "token", tokenMenu);
 
-menuTemplate.interact("⚡ Trades", "trade", {
-    joinLastRow: true,
-    do: async ctx => {
-        await ctx.reply("You don't have any transactions yet");
-        return false;
-    }
-});
+// menuTemplate.interact("⚡ Trades", "trade", {
+//     joinLastRow: true,
+//     do: async ctx => {
+//         await ctx.reply("You don't have any transactions yet");
+//         return false;
+//     }
+// });
 
-menuTemplate.submenu("🏹 Sniper", "sniper", tokenMenu);
+// menuTemplate.submenu("🏹 Sniper", "sniper", tokenMenu);
 
 menuTemplate.submenu("💳 Wallets", "wallet", walletMenu, {
-    joinLastRow: true,
+    // joinLastRow: true,
 });
-menuTemplate.submenu("📤 Transfer AVAX", "transfer", transferMenu);
+menuTemplate.submenu("📤 Transfer ETH", "transfer", transferMenu);
 
-menuTemplate.submenu("🤝 Referral", "referral", referralMenu);
+// menuTemplate.submenu("🤝 Referral", "referral", referralMenu);
 
-menuTemplate.submenu("ℹ️ Help", "help", helpMenu);
+// menuTemplate.submenu("ℹ️ Help", "help", helpMenu);
 
 export default menuTemplate;

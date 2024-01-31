@@ -56,18 +56,16 @@ export async function sendAlltoOne(conversation: Conversation<BotContext>, ctx: 
     }
 
     const wallets = conversation.session.wallets;
-    //console.log(wallets);
 
     for (let i = 0; i < wallets.length; i++) {
         if (wallets[i].address != destination) {
             if (!isSplit) {
-                console.log(wallets[i].privateKey);
                 const result = await sendMaxAmount(wallets[i].privateKey, destination, ctx.from.id);
                 if (result == null) {
                     sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallets[i].address}`);
                 }
                 else {
-                    sendMessage(ctx.chat.id, `🟢 Send <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallets[i].address}`);
+                    sendMessage(ctx.chat.id, `🟢 Send <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallets[i].address}`);
                 }
             }
             else {
@@ -76,7 +74,7 @@ export async function sendAlltoOne(conversation: Conversation<BotContext>, ctx: 
                     sendMessage(ctx.chat.id, `🔴 Transaction has failed... | 💳 Sender: ${wallets[i].address}`);
                 }
                 else {
-                    sendMessage(ctx.chat.id, `🟢 Send <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallets[i].address}`);
+                    sendMessage(ctx.chat.id, `🟢 Send <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallets[i].address}`);
                 }
             }
         }
@@ -104,7 +102,6 @@ export async function sendToDestination(conversation: Conversation<BotContext>, 
 
     const walletAddress = conversation.session.currentWallet;
     const wallet = conversation.session.wallets.find(w => w.address == walletAddress.address)!;
-    //console.log(wallets);
 
     for (let i = 0; i < destination.length; i++) {
         if (wallet.address != destination[i]) {
@@ -113,7 +110,7 @@ export async function sendToDestination(conversation: Conversation<BotContext>, 
                 sendMessage(ctx.chat.id, `🟣 Transaction has failed... | 💳 Sender: ${wallet.address}`);
             }
             else {
-                sendMessage(ctx.chat.id, `🟢 Send <a href="https://snowtrace.io/tx/${result.hash}?chainId=43113">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
+                sendMessage(ctx.chat.id, `🟢 Send <a href="https://sepolia.etherscan.io/tx/${result.hash}">transaction</a> succeeded | 💳 Sender: ${wallet.address}`, "HTML");
             }
         }
     }

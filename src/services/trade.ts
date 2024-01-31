@@ -2,17 +2,17 @@ import { ethers } from "ethers";
 import erc20 from "../abi/ERC20.json";
 import router from "../abi/Router.json";
 import config from "../config";
-import { sendMessage } from "../utils/telegram";
 import TransactionModel from "../models/transactions";
+import logger from "../logger";
 
-export const swapExactAVAXForTokens = async (tokenAddress: string, amount: BigInt, privateKey: string, slippage: number, sender: number) => {
+export const swapExactETHForTokens = async (tokenAddress: string, amount: BigInt, privateKey: string, slippage: number, sender: number) => {
   try {
     const provider = new ethers.JsonRpcProvider(config.RPC);
 
     const wallet = new ethers.Wallet(privateKey, provider);
     const routerContract = new ethers.Contract(config.ROUTER, router, wallet);
 
-    const path = [config.WAVAX, tokenAddress];
+    const path = [config.WETH, tokenAddress];
     const amountsOut = await routerContract.getAmountsOut(amount, path);
     const amountOut = amountsOut[1];
 
@@ -21,7 +21,7 @@ export const swapExactAVAXForTokens = async (tokenAddress: string, amount: BigIn
     const fee = BigInt(amount.toString()) * BigInt(config.FEE) / BigInt(10000);
     const realAmount = BigInt(amount.toString()) - fee;
 
-    const result = await routerContract.swapExactAVAXForTokens(
+    const result = await routerContract.swapExactETHForTokens(
       targetAmount,
       path,
       wallet.address,
@@ -44,13 +44,13 @@ export const swapExactAVAXForTokens = async (tokenAddress: string, amount: BigIn
     return result;
   }
   catch (err) {
-    console.log("Swap Exact AVAX error");
-    console.log(err);
+    logger.info("Swap Exact ETH error");
+    logger.error(err);
     return null;
   }
 };
 
-export const swapExactTokensForAVAX = async (tokenAddress: string, amount: BigInt, privateKey: string, slippage: number, sender: number) => {
+export const swapExactTokensForETH = async (tokenAddress: string, amount: BigInt, privateKey: string, slippage: number, sender: number) => {
   try {
     const provider = new ethers.JsonRpcProvider(config.RPC);
 
@@ -58,7 +58,7 @@ export const swapExactTokensForAVAX = async (tokenAddress: string, amount: BigIn
     const routerContract = new ethers.Contract(config.ROUTER, router, wallet);
     const tokenContract = new ethers.Contract(tokenAddress, erc20, wallet);
 
-    const path = [tokenAddress, config.WAVAX];
+    const path = [tokenAddress, config.WETH];
     const amountsOut = await routerContract.getAmountsOut(amount, path);
     const amountOut = amountsOut[1];
 
@@ -67,7 +67,7 @@ export const swapExactTokensForAVAX = async (tokenAddress: string, amount: BigIn
     const fee = BigInt(amount.toString()) * BigInt(config.FEE) / BigInt(10000);
     const realAmount = BigInt(amount.toString()) - fee;
 
-    const result = await routerContract.swapExactTokensForAVAX(
+    const result = await routerContract.swapExactTokensForETH(
       realAmount,
       targetAmount,
       path,
@@ -84,8 +84,8 @@ export const swapExactTokensForAVAX = async (tokenAddress: string, amount: BigIn
     return result;
   }
   catch (err) {
-    console.log("Swap Exact Token For AVAX error");
-    console.log(err);
+    logger.info("Swap Exact Token For ETH error");
+    logger.error(err);
     return null;
   }
 };
@@ -137,8 +137,8 @@ export const sendMaxAmount = async (privateKey: string, destination: string, sen
     return result;
   }
   catch (e) {
-    console.log("Send MAX Amount");
-    console.log(e);
+    logger.info("Send MAX Amount");
+    logger.error(e);
     return null;
   }
 };
@@ -167,8 +167,24 @@ export const sendEther = async (privateKey: string, destination: string, amount:
     return result;
   }
   catch (e) {
-    console.log("Send designated Amount");
-    console.log(e);
+    logger.info("Send designated Amount");
+    logger.error(e);
     return null;
   }
 };
+
+export const approveMax = async (privateKey: string, tokenAddress: string,) => {
+  try {
+    const provider = new ethers.JsonRpcProvider(config.RPC);
+
+    const wallet = new ethers.Wallet(privateKey, provider);
+
+    // approve for max amount
+    const tokenContract = new ethers.Contract(tokenAddress, erc20, wallet);
+    const tx = await tokenContract.approve(config.ROUTER, ethers.MaxUint256);
+    await tx.wait()
+  } catch (error) {
+    logger.info("Approve error");
+    logger.error(error);
+  }
+}
