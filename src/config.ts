@@ -12,6 +12,7 @@ const createConfigFromEnvironment = (environment: NodeJS.ProcessEnv) => {
         BOT_ADMINS: z.array(z.number()).default([]),
         MONGO_URL: z.string(),
         RPC: z.string(),
+        WSS_RPC: z.string(),
         WETH: z.string(),
         ROUTER: z.string(),
         FACTORY: z.string(),

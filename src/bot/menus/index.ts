@@ -28,7 +28,7 @@ menuTemplate.submenu("📈 Buy & Sell", "token", tokenMenu);
 //     }
 // });
 
-// menuTemplate.submenu("🏹 Sniper", "sniper", tokenMenu);
+menuTemplate.submenu("🏹 Sniper", "sniper", sniperMenu);
 
 menuTemplate.submenu("💳 Wallets", "wallet", walletMenu, {
     // joinLastRow: true,

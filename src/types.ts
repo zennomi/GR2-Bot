@@ -1,5 +1,6 @@
 import { Conversation, ConversationFlavor } from "@grammyjs/conversations";
 import { ChatTypeContext, Context, SessionFlavor } from "grammy";
+import { Sniper } from "./models/sniper";
 
 // Define the shape of our session.
 export interface SessionData {
@@ -23,6 +24,8 @@ export interface SessionData {
         isAllWallet: boolean;
         slippage: number;
     };
+    snipers: Sniper[],
+    currentSniper?: Sniper
 }
 
 // Flavor the context type to include sessions.

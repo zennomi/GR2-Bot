@@ -13,7 +13,6 @@ import * as TransferConversation from "./conversations/transfer";
 
 import logger from "../logger";
 import handleError from "../utils/handleError";
-import { User } from "../models/user";
 import ReferralModel from "../models/referral";
 import ReferreeModel from "../models/referree";
 import { generateUniqueString } from "../utils/helpers";
@@ -26,6 +25,7 @@ bot.use(session({
         // return empty object for now
         return {
             wallets: [],
+            snipers: [],
             currentWallet: {
                 address: "",
                 index: -1
