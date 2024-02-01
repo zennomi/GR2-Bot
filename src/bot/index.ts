@@ -111,7 +111,7 @@ bot.command('sniper', ctx => menuMiddleware.replyToContext(ctx));
 
 // config
 bot.api.setMyCommands([
-    { command: "sniper", description: "Activate the Para Bot" }
+    { command: "sniper", description: "Activate the GR2 Bot" }
 ]);
 
 // handle error

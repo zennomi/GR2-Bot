@@ -8,8 +8,7 @@ import referralMenu from "./referral";
 import helpMenu from "./help";
 
 const menuTemplate = new MenuTemplate<BotContext>((ctx) => {
-    const text = `🚀 AvaxTradingBot: Your Gateway to Avax DeFi 🤖\n` +
-        `<a href="https://avax.com">Website</a>`;
+    const text = `🚀 GR2 Trading Bot: Your Gateway to DeFi 🤖\n`
 
     return {
         text,
