@@ -25,4 +25,11 @@ sniperMenu.interact("Create new sniper", "create", {
     }
 })
 
+sniperMenu.interact("Reload 🔄️", "reload", {
+    do: async ctx => {
+        ctx.session.snipers = await SniperModel.find({ owner: ctx.from.id })
+        return true
+    }
+})
+
 export default sniperMenu
